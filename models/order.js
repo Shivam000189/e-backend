@@ -8,7 +8,11 @@ const OrderItemSchema = new mongoose.Schema({
     },
     name : String,
     price : Number,
-    quantity: Number
+    quantity: Number,
+    seller: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 });
 
 

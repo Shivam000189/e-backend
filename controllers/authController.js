@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -20,7 +20,7 @@ exports.register = async (req, res) => {
       name,
       email,
       password,
-      role // hashing handled by model
+      role: role || 'user'
     });
 
     res.status(201).json({

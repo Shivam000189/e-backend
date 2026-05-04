@@ -10,12 +10,14 @@ A RESTful backend for an e-commerce platform built with Node.js, Express, and Mo
 
 ## Features
 - User registration and login with JWT
-- Role-based access (admin / user)
+- Role-based access (admin / seller / user)
 - Product CRUD with category support
 - Cart management
 - Order placement and cancellation
 - Product search with pagination and filters
 - Review and rating system
+- Seller dashboard APIs for products, orders, stock, and inventory summaries
+- Basic collaborative-filtering recommendations with popular/category fallback
 
 ## Getting Started
 
@@ -57,11 +59,25 @@ npm run dev
 ### Products
 | Method | Endpoint | Access | Description |
 |--------|----------|--------|-------------|
+| GET | /p1/products | Public | List products with filters |
 | GET | /p1/products/search | Public | Search products |
-| GET | /p1/products | Auth | Get all products |
-| POST | /p1/products/create | Admin | Create product |
-| PUT | /p1/products/:id | Admin | Update product |
-| DELETE | /p1/products/:id | Admin | Delete product |
+| GET | /p1/product/:id | Public | Product details |
+| POST | /p1/products/create | Seller/Admin | Create product |
+| PUT | /p1/products/:id | Seller/Admin | Update owned product |
+| DELETE | /p1/products/:id | Seller/Admin | Soft delete owned product |
+
+Product listing/search query params:
+`search`, `category`, `minPrice`, `maxPrice`, `minRating`, `sort`, `sortDir`, `page`, `limit`.
+Allowed sort fields: `price`, `createdAt`, `rating`, `stock`, `name`.
+
+### Seller Dashboard
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /p1/seller/products | Seller product inventory |
+| GET | /p1/seller/orders | Orders containing seller products |
+| GET | /p1/seller/inventory/summary | Inventory counts and low-stock summary |
+| GET | /p1/seller/inventory/low-stock | Low-stock products |
+| PATCH | /p1/seller/products/:id/stock | Update product stock |
 
 ### Cart
 | Method | Endpoint | Description |
@@ -76,9 +92,17 @@ npm run dev
 |--------|----------|--------|-------------|
 | POST | /p1/orders | Auth | Place order |
 | GET | /p1/orders/my | Auth | My orders |
+| GET | /p1/orders/:id | Auth | Order details |
 | PUT | /p1/orders/:id/cancel | Auth | Cancel order |
 | GET | /p1/orders/orders | Admin | All orders |
 | PUT | /p1/admin/orders/:id/status | Admin | Update status |
+| PUT | /p1/admin/orders/:id/payment | Admin | Update payment status |
+
+### Recommendations
+| Method | Endpoint | Access | Description |
+|--------|----------|--------|-------------|
+| GET | /p1/products/:productId/recommendations | Public | Products often bought together |
+| GET | /p1/recommendations | Auth | Personalized recommendations |
 
 
 
